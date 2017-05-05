@@ -1,21 +1,19 @@
 var Basic = require("./BasicCard"); //basiccard is the filename
 var Cloze = require("./ClozeCard");
+
 // dependency for inquirer npm package
 var inquirer = require("inquirer");
 var fs = require("fs");
-
 var DisplayCard = new Cloze.Cloze(Cloze.QA[0].full, Cloze.QA[0].cloze);
-// console.log(DisplayCard.full);
-// console.log(DisplayCard.cloze);
-// console.log(DisplayCard.partial());
 
 var cardType;
 var questionType;
 var cloze1 = [];
-// var obj={};
 var marker = 0;
 var read = 0;
-/////own input?
+
+
+//////////////////////////////////Collect initial data: Game type and Question Type
 
 inquirer
   .prompt([
@@ -52,7 +50,7 @@ inquirer
       }
   });
 
-////////////////////////////////////////////////// CREATE YOUR OWN
+////////////////////////////////////////////////// CREATE YOUR OWN QUESTIONS
 
 var count = 0;
 function create() {
@@ -72,12 +70,7 @@ function create() {
       ])
       .then(function(answers) {
         var obj = new Cloze.Cloze(answers.full, answers.cloze);
-        console.log(obj);
-        console.log(obj.partial());
-        console.log(JSON.stringify(obj));
-        obj = JSON.stringify(obj);
         cloze1.push(obj);
-
         create();
       });
 
@@ -90,9 +83,9 @@ function create() {
 } // end create
 
 
-/////////////////////////////////////////////////////////////////WRITE AND READ CREATED
+/////////////////////////////////////////////////////////////////WRITE AND READ CREATED QUESTIONS
 function write() {
-  fs.appendFile("questions.json", cloze1, function(err) {
+  fs.writeFile("questions.json", JSON.stringify(cloze1), function(err) {
     if (err) {
       return console.log(err);
     }
@@ -108,23 +101,15 @@ function read1() {
       return console.log("error: " + error);
     }
   
-  cloze1 = JSON.stringify(data);
-  // cloze1 = cloze1.replace(/ \ /g, ""); 
-  obj = JSON.parse(cloze1);
-  obj = JSON.parse(obj);
+  obj = JSON.parse(data);
 
   console.log("Read material:    "+obj);
     });
     
-//var dataArr = JSON.parse(data); // creates error
-
-// cloze1 = data.split(",");
-
-// console.log("Split:  "+ dataArr);
   
 }
 
-//////////////////////////////////////////////////////////////////////USE OURS
+//////////////////////////////////////////////////////////////////////USE OUR QUESTIONS
 
 function use() {
  if (cardType[0]=="B")
@@ -166,7 +151,7 @@ function use() {
     } //if card type b 
     else {
 
-///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////// USE THEIR CREATED QUESTIONS
 
       console.log("Cloze card chosen!");
       var count = 0;
@@ -212,11 +197,6 @@ function use() {
   
     } //ends use your own 
 
- 
-
-
-
- 
 
 // /////////////////////////////////////////////////////////CLOZE
 
